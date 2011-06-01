@@ -1,0 +1,25 @@
+<html>
+<head>
+  <title>Arquitetura de Aplicações de Código Aberto: Violet</title>
+</head>
+<body>
+  <h1>Capítulo 22. Violet</h1>
+  <p id="author">Cay Horstmann</p>
+
+  <p>Em 2002, eu escrevi um livro-texto para cursos de graduação de padrões e projeto orientado a objetos [Hor05]. Como acontece com muitos livros, este foi motivado pela frustração com o currículo padrão. Frequentemente, estudantes de ciência da computação aprendem como projetar uma classe única em seu primeiro curso de programação, e depois disto só voltam a ter treinamento em projeto orientado a objetos em seu curso de engenharia de software de nível superior. Neste curso, os estudantes passam rapidamente por curso de duas semanas de UML e padrões de projeto, que lhes dá não mais que uma ilusão de conhecimento. Meu livro dá suporte a um curso de um semestre para estudantes com um conhecimento prévio de programação Java e estruturas de dados básicas (tipicamente vindos de uma sequência CC1/CC2 baseada em Java). O livro cobre princípios de projeto orientado a objetos e padrões de projeto no contexto de situações familiares. Por exemplo, o padrão de projeto Decorator é introduzido com um <code>JScrollPane</code> do Swing, na esperança de que este exemplo seja mais memorável do que o exemplo padrão utilizando <i>streams</i> do Java.</p>
+
+<p>Figura 22.1: Um diagrama de objetos do Violet</p>
+
+<p>Eu precisava de um subconjunto leve da UML para o livro: diagramas de classes, diagramas de sequência e uma variação do diagrama de objetos que mostra referências para objetos Java (Figura 22.1). Eu também queria que os alunos pudessem desenhar seus próprios diagramas. Contudo, ofertas comerciais como Rational Rose eram não apenas caras, mas também difíceis de aprender e usar [Shu05] e as alternativas de código aberto disponíveis à época eram limitadas ou defeituosas demais para serem úteis, nas quais diagramas são especificados por declarações textuais em lugar das costumeiras interfaces baseadas no uso do mouse. Em particular, os diagramas de sequência do ArgoUML eram seriamente fracos.</p>
+
+<p>Eu decidi tentar fazer algo a respeito implementando o editor mais simples possível que seja (a) útil para estudantes e (b) um exemplo de um <i>framework</i> extensível que os estudantes possam entender e modificar. Assim, Violet nasceu.</p>
+
+
+<h2>22.1. Introduzindo Violet</h2>
+
+<p>Violet é um editor UML leve, projetado para estudantes, professores e autores que precisem produzir diagramas UML simples rapidamente. É muito fácil de aprender e usar. Ele desenha diagramas de classes, sequência, estado, objetos e casos de uso. (Contribuições têm trazido outros tipos de diagramas.) É um software de código aberto e multiplataforma. Em seu núcleo, Violet usa um <i>framework</i> de grafos simples porém flexível, que tira o máximo proveito da API gráfica Java 2D.</p>
+
+
+</body>
+</html>
+
