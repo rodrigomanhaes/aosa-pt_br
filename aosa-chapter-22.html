@@ -19,6 +19,22 @@
 
 <p>Violet é um editor UML leve, projetado para estudantes, professores e autores que precisem produzir diagramas UML simples rapidamente. É muito fácil de aprender e usar. Ele desenha diagramas de classes, sequência, estado, objetos e casos de uso. (Contribuições têm trazido outros tipos de diagramas.) É um software de código aberto e multiplataforma. Em seu núcleo, Violet usa um <i>framework</i> de grafos simples porém flexível, que tira o máximo proveito da API gráfica Java 2D.</p>
 
+<p>A interface com o usuário de Violet é deliberadamente simples. Você não tem que navegar através de uma tediosa sequência de caixas de diálogo para inserir atributos e métodos. Ao contrário, você apenas os digita em um campo de texto. Com poucos cliques de mouse, você pode rapidamente criar diagramas simples e úteis.</p>
+
+<p class='verificar'>Violet não tenta ser um software UML comercialmente competitivo. Aqui vão algumas funcionalidades que Violet <i>não</i> tem:</p>
+
+<ul>
+  <li>Violet não gera código-fonte a partir de diagramas UML nem diagramas UML a partir de código-fonte.</li>
+  <li>Violet não realiza nenhuma verificação semântica de modelos; você pode desenhar diagramas contraditórios com Violet.</li>
+  <li>Violet não gera arquivos que possam ser importados por outras ferramentas UML, nem é capaz de ler arquivos de modelos criados com outras ferramentas.</li>
+  <li>Violet não tenta definir o <li>layout</li> dos diagramas automaticamente, exceto por uma funcionalidade de "ajustar à grade".</li>
+</ul>
+
+<p>(Tentar solucionar algumas destas limitações gera bons projetos de alunos.)</p>
+
+<p class='verificar'>Quando Violet passou ser admirado por projetistas que queriam mais que um guardanapo mas menos que uma ferramenta UML de escala industrial, eu publiquei o código no SourceForge sob a Licença Pública da GNU (GNU Public License). Em 2005, Alexandre de Pellegrin entrou para o projeto ao criar um plugin para o Eclipse e uma interface com o usuário mais bonita. Desde então, ele realizou numerosas mudanças arquiteturais e agora é o principal mantenedor do projeto.</p>
+
+<p>Neste artigo, eu discuto algumas das opções arquiteturais originais no Violet, bem como sua evolução. Uma parte do artigo é focada em edição de grafos, mas outras partes - como o uso de propriedades JavaBeans e persistência, Java WebStart e arquitetura de plugins - deve ser de interesse geral.</p>
 
 </body>
 </html>
