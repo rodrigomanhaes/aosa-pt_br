@@ -36,6 +36,115 @@
 
 <p>Neste artigo, eu discuto algumas das opções arquiteturais originais no Violet, bem como sua evolução. Uma parte do artigo é focada em edição de grafos, mas outras partes - como o uso de propriedades JavaBeans e persistência, Java WebStart e arquitetura de plugins - deve ser de interesse geral.</p>
 
+
+<h2>O Framework de Grafos</h2>
+
+<p>Violet é baseado em um framework de edição de grafos que pode renderizar e editar nós e arestas de formas arbitrárias. O editor de UML do Violet tem nós para classes, objetos, barras de ativação (em diagramas de sequência) e assim por diante, e arestas para os vários formatos de aresta em diagramas UML. Outra instância do framework de grafos pode exibir diagramas de entidade-relacionamento ou diagramas de sintaxe.</p>
+
+<p>Figura 22.2: Uma Instância Simples do Editor</p>
+
+<p>Para ilustrar o framework, vamos considerar um editor para grafos muito simples, com nós circulares pretos e brancos e arestas em linha reta (Figura 22.2). A classe <code>SimpleGraph</code> (grafo simples) especifica objetos protótipo para os tipos nó e aresta, ilustrando o padrão Prototype:</p>
+
+<code>
+public class SimpleGraph extends AbstractGraph
+{
+  public Node[] getNodePrototypes()
+  {
+    return new Node[]
+    {
+      new CircleNode(Color.BLACK),
+      new CircleNode(Color.WHITE)
+    };
+  }
+  public Edge[] getEdgePrototypes()
+  {
+    return new Edge[]
+    {
+      new LineEdge()
+    };
+  }
+}
+</code>
+
+<p>Objetos protótipo são usados para desenhar os botões nó e aresta na parte superior da Figura 22.2. Eles são clonados sempre que o usuário adiciona uma nova instância de nó ou aresta ao grafo. <code>Node</code> (nó) e <code>Edge</code> (aresta) são interface com os seguintes métodos principais:</p>
+
+<ul>
+  <li>Ambas as interfaces têm um método <code>getShape</code> que retorna um objeto Java2D <code>Shape</code> da forma do nó ou aresta.</li>
+  <li>A interface <code>Edge</code> tem métodos que fornecem os nós do início e do fim da aresta.</li>
+  <li>O método <code>getConnectionPoint</code> (obter ponto de conexão) na interface <code>Node</code> calcula um ponto ideal de conexão na borda de um nó (ver Figura 22.3).</li>
+  <li>O método <code>getConnectionPoints</code> da interface <code>Edge</code> fornece os dois pontos terminais da aresta. Este método é necessário para desenhar as "alças" que indicam a aresta selecionada no momento.</li>
+  <li>Um nó pode ter filhos que se movem junto com o pai, e fornece métodos para enumerar e gerenciar filhos.</li>
+</ul>
+
+<p>Figura 22.3: Encontrando um Ponto de Conexão na Borda da Forma Nó</p>
+
+<p>As classes de conveniência <code>AbstractNode</code> e <code>AbstractEdge</code> implementam uma quantidade destes métodos, e as classes <code>RectangularNode</code> e <code>SegmentedLineEdge</code> fornecem implementações completas de nós retangulares com uma string de título e bordas que são feitas de segmentos de linha.</p>
+
+<p>No caso do nosso editor simples de grafos, nós precisaríamos prover um método <code>draw</code> (desenhar), um método <code>contains</code> (contém) e o método <code>getConnectionPoint</code>, que descreve a forma da borda do nó. O código é dado abaixo, e a Figura 22.4 mostra o diagrama de classes destas classes (desenhados, é claro, com Violet).</p>
+
+<code>
+public class CircleNode extends AbstractNode
+{
+  public CircleNode(Color aColor)
+  {
+    size = DEFAULT_SIZE;
+    x = 0;
+    y = 0;
+    color = aColor;
+  }
+
+  public void draw(Graphics2D g2)
+  {
+    Ellipse2D circle = new Ellipse2D.Double(x, y, size, size);
+    Color oldColor = g2.getColor();
+    g2.setColor(color);
+    g2.fill(circle);
+    g2.setColor(oldColor);
+    g2.draw(circle);
+  }
+
+  public boolean contains(Point2D p)
+  {
+    Ellipse2D circle = new Ellipse2D.Double(x, y, size, size);
+    return circle.contains(p);
+  }
+
+  public Point2D getConnectionPoint(Point2D other)
+  {
+    double centerX = x + size / 2;
+    double centerY = y + size / 2;
+    double dx = other.getX() - centerX;
+    double dy = other.getY() - centerY;
+    double distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance == 0) return other;
+    else return new Point2D.Double(
+      centerX + dx * (size / 2) / distance,
+      centerY + dy * (size / 2) / distance);
+  }
+
+  private double x, y, size, color;
+  private static final int DEFAULT_SIZE = 20;
+}
+
+public class LineEdge extends AbstractEdge
+{
+  public void draw(Graphics2D g2)
+  { g2.draw(getConnectionPoints()); }
+
+  public boolean contains(Point2D aPoint)
+  {
+    final double MAX_DIST = 2;
+    return getConnectionPoints().ptSegDist(aPoint) < MAX_DIST;
+  }
+}
+</code>
+
+<p>Figura 22.4: Diagrama de Classes para um Grafo Simples</p>
+
+<p>Em resumo, Violet provê um framework simples para edição de grafos. Para obter uma instância do editor, definir classes nó e aresta e oferecer métodos em uma classe de grafos que gere objetos protótipo nó e aresta.</p>
+
+<p>É claro, há outros frameworks de grafos disponíveis, como JGraph [Ald02] e JUNG(2). Contudo, estes frameworks são consideravelmente mais complexos e eles fornecem frameworks para desenho de grafos, não para aplicações que desenham grafos.</p>
+
 </body>
 </html>
 
