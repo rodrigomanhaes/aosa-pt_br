@@ -1,4 +1,4 @@
-<html>
+c<html>
 <head>
   <title>Arquitetura de Aplicações de Código Aberto: Violet</title>
 </head>
@@ -261,6 +261,34 @@ Graph graph = (Graph) decoder.readObject();
 </code>
 
 <p>Esta abordagem funcionou extremamente bem por numerosas versões de Violet, com uma exceção. Uma refatoração recente mudou alguns nomes de pacotes e assim quebrou a compatibilidade retroativa. Uma opção teria sido manter as classes em seus pacotes originais, mesmo que eles já não combinassem com a nova estrutura de pacotes. Em vez disto, o mantenedor forneceu um tradutor XML para reescrever os nomes dos pacotes ao ler um arquivo legado.</p>
+
+
+<h2>Java WebStart</h2>
+
+<p>Java WebStart é uma tecnologia para iniciar uma aplicação local a partir de um navegador web. É fornecido um arquivo JNLP que dispara uma aplicação de apoio no navegador que, por sua vez, baixa e roda o programa Java. A aplicação pode ser assinada digitalmente, situação na qual o usuário deve aceitar o certificado; ou pode ser não assinada, quando a aplicação roda em uma caixa de areia (<i>sandbox</i>) que é ligeiramente mais permissiva que a caixa de areia dos <i>applets</i>.</p>
+
+<p class="verificar">Eu não penso que usuários finais possam ou devam ser capazes de julgar a validade de um certificado digital e suas implicações de segurança. Um dos pontos fortes da plataforma Java é sua segurança, e eu sinto que é importante "play to this strength"·</p>
+
+<p>A caixa de areia do Java WebStart é suficientemente poderosa para permitir que usuários realizem trabalho útil, incluindo carregar e salvar arquivos e imprimir. Estas operações são tratadas de forma segura e conveniente do ponto de vista do usuário. O usuário é alertado de que a aplicação quer acessar o sistema de arquivos local e então escolhe o arquivo para ser lido ou escrito. A aplicação meramente recebe um objeto de fluxo (<i>stream</i>), sem ter a oportunidade de navegar pelo sistema de arquivos durante o processo de seleção do arquivo.</p>
+
+<p>É incômodo que o desenvolvedor deva escrever código específico para interagir com um <code>FileOpenService</code> e um <code>FileSaveService</code> quando a aplicação está rodando sob o Java WebStart, e é ainda mais incômodo que não haja uma chamada na API do Java WebStart para informar se a aplicação foi iniciada com o Java WebStart.</p>
+
+<p>Do mesmo modo, a armazenagem das preferências do usuário deve ser implementada de dois modos: usando a API de preferências quando a aplicação roda normalmente, ou usando o serviço de preferências do WebStart quando a aplicação está rodando sob o WebStart. Impressão, por outro lado, é inteiramente transparente ao programador da aplicação.</p>
+
+<p>Violet provê camadas simples de abstração sobre estes serviços para simplificar sobremaneira o programador da aplicação. Por exemplo, aqui está o código para abrir um arquivo:</p>
+
+<code>
+FileService service = FileService.getInstance(initialDirectory);
+  // detects whether we run under WebStart
+FileService.Open open = fileService.open(defaultDirectory, defaultName,
+  extensionFilter);
+InputStream in = open.getInputStream();
+String title = open.getName();
+</code>
+
+<p>A interface <code>FileService.Open</code> é implementada por duas classes: uma classe envelope (<i>wrapper</i>) sobre <code>JFileChooser</code> ou sobre <code>FileOpenService</code> da JNLP.</p>
+
+<p>Nenhuma destas conveniências é parte da própria API do JNLP, mas esta API tem recebido pouco cuidado durante sua existência e tem sido largamente ignorada. A maioria dos projetos simplesmente usa um certificado autoassinado para sua aplicação WebStart, o que não provê segurança aos usuários. Isto é uma vergonha - desenvolvedores de software de código aberto deveriam reconhecer a caixa de areia do JNLP como um modo livre de riscos de experimentar um projeto.</p>
 
 </body>
 </html>
