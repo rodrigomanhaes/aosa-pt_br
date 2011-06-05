@@ -13,7 +13,7 @@
   <p>Figura 22.1: Um Diagrama de Objetos do Violet</p>
 </div>
 
-<p>Eu precisava de um subconjunto leve da UML para o livro: diagramas de classes, diagramas de sequência e uma variação do diagrama de objetos que mostra referências para objetos Java (<a href="#fig.vio.diagram">Figura&nbsp;22.1</a>). Eu também queria que os alunos pudessem desenhar seus próprios diagramas. Contudo, ofertas comerciais como Rational Rose eram não apenas caras, mas também difíceis de aprender e usar [<a href="bibliography.html#bib:shumba:ratrose">Shu05</a>] e as alternativas de código aberto disponíveis à época eram limitadas ou defeituosas demais para serem úteis, nas quais diagramas são especificados por declarações textuais em lugar das costumeiras interfaces baseadas no uso do mouse. Em particular, os diagramas de sequência do ArgoUML eram seriamente fracos.</p>
+<p>Eu precisava de um subconjunto leve da UML para o livro: diagramas de classes, diagramas de sequência e uma variação do diagrama de objetos que mostra referências para objetos Java (<a href="#fig.vio.diagram">Figura&nbsp;22.1</a>). Eu também queria que os alunos pudessem desenhar seus próprios diagramas. Contudo, ofertas comerciais como Rational Rose eram não apenas caras, mas também difíceis de aprender e usar [<a href="bibliography.html#bib:shumba:ratrose">Shu05</a>] e as alternativas de código aberto disponíveis à época eram limitadas ou defeituosas demais para serem úteis<sup class="footnote"><a href="#footnote-1">1</a></sup>, nas quais diagramas são especificados por declarações textuais em lugar das costumeiras interfaces baseadas no uso do mouse. Em particular, os diagramas de sequência do ArgoUML eram seriamente fracos.</p>
 
 <p>Eu decidi tentar fazer algo a respeito implementando o editor mais simples possível que seja (a) útil para estudantes e (b) um exemplo de um <i>framework</i> extensível que os estudantes possam entender e modificar. Assim, Violet nasceu.</p>
 
@@ -155,7 +155,7 @@ public class LineEdge extends AbstractEdge
 
 <p>Em resumo, Violet provê um <i>framework</i> simples para edição de grafos. Para obter uma instância do editor, definir classes nó e aresta e oferecer métodos em uma classe de grafos que gere objetos protótipo nó e aresta.</p>
 
-<p>É claro, há outros <i>frameworks</i> de grafos disponíveis, como JGraph [<a href="bibliography.html#bib:alder:jgraph">Ald02</a>] e JUNG(2). Contudo, estes <i>frameworks</i> são consideravelmente mais complexos e eles fornecem <i>frameworks</i> para desenho de grafos, não para aplicações que desenham grafos.</p>
+<p>É claro, há outros <i>frameworks</i> de grafos disponíveis, como JGraph [<a href="bibliography.html#bib:alder:jgraph">Ald02</a>] e JUNG<sup class="footnote"><a href="#footnote-2">2</a></sup>. Contudo, estes <i>frameworks</i> são consideravelmente mais complexos e eles fornecem <i>frameworks</i> para desenho de grafos, não para aplicações que desenham grafos.</p>
 
 
 <h2>O Uso de Propriedades JavaBeans</h2>
@@ -181,9 +181,9 @@ public Color getColor()
 
 <h2>Persistência de longo prazo</h2>
 
-<p>Como qualquer editor, Violet deve salvar as criações do usuário em um arquivo e carregá-las posteriormente. Eu dei uma olhada na especificação XMI, que foi projetada como um formato de intercâmbio padrão para modelos UML. Eu o considerei pesado, confuso e difícil de consumir. Eu acredito não ter sido o único - XML tem uma reputação de interoperabilidade pobre mesmo para os modelos mais simples [<a href="bibliography.html#bib:persson:osstools">PGL+05</a>].</p>
+<p>Como qualquer editor, Violet deve salvar as criações do usuário em um arquivo e carregá-las posteriormente. Eu dei uma olhada na especificação XMI<sup class="footnote"><a href="#footnote-3">3</a></sup>, que foi projetada como um formato de intercâmbio padrão para modelos UML. Eu o considerei pesado, confuso e difícil de consumir. Eu acredito não ter sido o único - XML tem uma reputação de interoperabilidade pobre mesmo para os modelos mais simples [<a href="bibliography.html#bib:persson:osstools">PGL+05</a>].</p>
 
-<p>Eu pensei em simplesmente usar a serialização do Java, mas é difícil ler versões antigas de um objeto serializado cuja implementação foi alterada ao longo do tempo. Este problema também foi antecipado pelos arquitetos do JavaBeans, que desenvolveram um formato padrão de XML para persistência de longo prazo. Um objeto Java - no caso de Violet, um diagrama UML - é serializado como uma sequência de declarações para construí-lo e modificá-lo. Aqui está um exemplo:</p>
+<p>Eu pensei em simplesmente usar a serialização do Java, mas é difícil ler versões antigas de um objeto serializado cuja implementação foi alterada ao longo do tempo. Este problema também foi antecipado pelos arquitetos do JavaBeans, que desenvolveram um formato padrão de XML para persistência de longo prazo<sup class="footnote"><a href="#footnote-4">4</a></sup>. Um objeto Java - no caso de Violet, um diagrama UML - é serializado como uma sequência de declarações para construí-lo e modificá-lo. Aqui está um exemplo:</p>
 
 <code><pre>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -359,7 +359,7 @@ job.print(doc, attributes);
 
 <h2>Sem um <i>Framework</i> de Aplicações Swing</h2>
 
-<p class="verificar">A maioria dos <i>frameworks</i> de interface gráfica possuem o conceito de uma aplicação que gerencia um conjunto de documentos que lida com menus, barras de rolagem, barras de <i>status</i> etc. Contudo, isto nunca foi parte da API do Java. A JSR 296 deveria fornecer um <i>framework</i> básico para aplicações Swing, mas atualmente está inativa. Assim, o autor de uma aplicação Swing tem duas escolhas: reinventar um bom número de rodas ou se basear em um <i>framework</i> de terceiros. No momento em que Violet foi escrito, as principais opções para um <i>framework</i> de aplicações eram o Eclipse e a plataforma NetBeans, ambas as quais pareciam pesadas demais à época. (Atualmente, há mais opções, entre elas <i>forks</i> da JSR 296 como o GUTS.) Assim, Violet teve que reinventar mecanismos para manipular menus e janelas internas (<i>internal frames</i>).</p>
+<p class="verificar">A maioria dos <i>frameworks</i> de interface gráfica possuem o conceito de uma aplicação que gerencia um conjunto de documentos que lida com menus, barras de rolagem, barras de <i>status</i> etc. Contudo, isto nunca foi parte da API do Java. A JSR 296<sup class="footnote"><a href="#footnote-5">5</a></sup> deveria fornecer um <i>framework</i> básico para aplicações Swing, mas atualmente está inativa. Assim, o autor de uma aplicação Swing tem duas escolhas: reinventar um bom número de rodas ou se basear em um <i>framework</i> de terceiros. No momento em que Violet foi escrito, as principais opções para um <i>framework</i> de aplicações eram o Eclipse e a plataforma NetBeans, ambas as quais pareciam pesadas demais à época. (Atualmente, há mais opções, entre elas <i>forks</i> da JSR 296 como o GUTS<sup class="footnote"><a href="#footnote-6">6</a></sup>.) Assim, Violet teve que reinventar mecanismos para manipular menus e janelas internas (<i>internal frames</i>).</p>
 
 <p>Em Violet, você especifica itens de menu em arquivos de propriedades, como esse:</p>
 
@@ -370,7 +370,7 @@ file.save.accelerator=ctrl S
 file.save.icon=/icons/16x16/save.png
 </code>
 
-<p>Um método utilitário cria o item de menu a partir do prefixo (aqui <code>file.save</code>). Os sufixos <code>.text</code>, <code>.mnemonic</code> e assim por diante, são o que hoje em dia poderia ser chamado "convenção mais que configuração". Usar arquivos de recursos para descrever estas definições é obviamente muito superior a definir menus com chamadas da API porque permite uma fácil localização. Eu reutilizei este mecanismo em outro projeto de código aberto, o ambiente GridWorld para o ensino de ciência da computação no ensino médio.</p>
+<p>Um método utilitário cria o item de menu a partir do prefixo (aqui <code>file.save</code>). Os sufixos <code>.text</code>, <code>.mnemonic</code> e assim por diante, são o que hoje em dia poderia ser chamado "convenção mais que configuração". Usar arquivos de recursos para descrever estas definições é obviamente muito superior a definir menus com chamadas da API porque permite uma fácil localização. Eu reutilizei este mecanismo em outro projeto de código aberto, o ambiente GridWorld para o ensino de ciência da computação no ensino médio<sup class="footnote"><a href="#footnote-7">7</a></sup>.</p>
 
 <p>Uma aplicação como Violet permite aos usuários abrir múltiplos "documentos", cada qual contendo um grafo. Quando Violet foi escrito pela primeira vez, a interface de múltiplos documentos (MDI) ainda era frequentemente utilizada. Com MDI, a janela principal tinha uma barra de menu, e cada documento era mostrado em uma janela interna com um título mas não uma barra de menu. Cada janela interna é contida na janela principal e pode ser redimensionado ou minimizado pelo usuário. Há operações para pôr as janelas em cascata ou lado a lado.</p>
 
