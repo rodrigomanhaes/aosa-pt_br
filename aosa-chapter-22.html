@@ -290,6 +290,61 @@ String title = open.getName();
 
 <p>Nenhuma destas conveniências é parte da própria API do JNLP, mas esta API tem recebido pouco cuidado durante sua existência e tem sido largamente ignorada. A maioria dos projetos simplesmente usa um certificado autoassinado para sua aplicação WebStart, o que não provê segurança aos usuários. Isto é uma vergonha - desenvolvedores de software de código aberto deveriam reconhecer a caixa de areia do JNLP como um modo livre de riscos de experimentar um projeto.</p>
 
+
+<h2>Java2D</h2>
+
+<p>Violet faz uso intensivo da biblioteca Java2D, uma das joias menos conhecidas da API do Java. Todo nó e toda aresta têm um método <code>getShape</code> (obter forma) que devolve um <code>java.awt.Shape</code>, a interface comum a todas as formas Java2D. Esta interface é implementada por retângulos, círculos, caminhos e suas uniões, interseções e diferenças. A classe <code>GeneralPath</code> é útil para definir formas que são compostas por linhas arbitrárias e segmentos curvos quadráticos/cúbicos, como setas retas e curvas.</p>
+
+<p>Para apreciar a flexibilidade do Java2D, considere o seguinte código para desenhar uma sombra no método <code>AbstractNode.draw</code>:</p>
+
+<code>
+Shape shape = getShape();
+if (shape == null) return;
+g2.translate(SHADOW_GAP, SHADOW_GAP);
+g2.setColor(SHADOW_COLOR);
+g2.fill(shape);
+g2.translate(-SHADOW_GAP, -SHADOW_GAP);
+g2.setColor(BACKGROUND_COLOR);
+g2.fill(shape);
+</code>
+
+<p>Poucas linhas de código produzem uma sombra para cada forma, até mesmo formas que um desenvolvedor possa adicionar posteriormente.</p>
+
+<p>Evidentemente, Violet salva images <i>bitmap</i> em qualquer formato que o pacote <code>javax.imageio</code> suporte; isto é, GIF, PNG, JPEG e assim por diante. Quando meu editor me perguntou sobre imagens vetoriais, eu notei outra vantagem da biblioteca Java2D. Quando você imprime em uma impressora PostScript, as operações do Java2D são traduzidas para operações de desenho vetorial do PostScript. Se você imprimir para um arquivo, o resultado poderá ser consumido por um programa como o <code>ps2eps</code> e então importado no Adobe Illustrator ou Inkscape. Aqui está o código, onde <code>comp</code> é o componente Swing cujo método <code>paintComponent</code> desenha o grafo:</p>
+
+<code>
+DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
+String mimeType = "application/postscript";
+StreamPrintServiceFactory[] factories;
+StreamPrintServiceFactory.lookupStreamPrintServiceFactories(flavor, mimeType);
+FileOutputStream out = new FileOutputStream(fileName);
+PrintService service = factories[0].getPrintService(out);
+SimpleDoc doc = new SimpleDoc(new Printable() {
+  public int print(Graphics g, PageFormat pf, int page) {
+      if (page >= 1) return Printable.NO_SUCH_PAGE;
+      else {
+        double sf1 = pf.getImageableWidth() / (comp.getWidth() + 1);
+        double sf2 = pf.getImageableHeight() / (comp.getHeight() + 1);
+        double s = Math.min(sf1, sf2);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.translate((pf.getWidth() - pf.getImageableWidth()) / 2,
+            (pf.getHeight() - pf.getImageableHeight()) / 2);
+        g2.scale(s, s);
+
+        comp.paint(g);
+        return Printable.PAGE_EXISTS;
+      }
+  }
+}, flavor, null);
+DocPrintJob job = service.createPrintJob();
+PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+job.print(doc, attributes);
+</code>
+
+<p class='verificar'>No início, eu estava preocupado com uma possível perda de desempenho ao usar formas gerais, mas provou-se não ser o caso. Clipping works well enough that only those shape operations that are required for updating the current viewport are actually executed .</p>
+
+
+
 </body>
 </html>
 
