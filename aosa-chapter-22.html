@@ -1,4 +1,4 @@
-c<html>
+<html>
 <head>
   <title>Arquitetura de Aplicações de Código Aberto: Violet</title>
 </head>
@@ -8,9 +8,12 @@ c<html>
 
   <p>Em 2002, eu escrevi um livro-texto para cursos de graduação de padrões e projeto orientado a objetos [<a href="bibliography.html#bib:horstmann:oodp">Hor05</a>]. Como acontece com muitos livros, este foi motivado pela frustração com o currículo padrão. Frequentemente, estudantes de ciência da computação aprendem como projetar uma classe única em seu primeiro curso de programação, e depois disto só voltam a ter treinamento em projeto orientado a objetos em seu curso de engenharia de software de nível superior. Neste curso, os estudantes passam rapidamente por curso de duas semanas de UML e padrões de projeto, que lhes dá não mais que uma ilusão de conhecimento. Meu livro dá suporte a um curso de um semestre para estudantes com um conhecimento prévio de programação Java e estruturas de dados básicas (tipicamente vindos de uma sequência CC1/CC2 baseada em Java). O livro cobre princípios de projeto orientado a objetos e padrões de projeto no contexto de situações familiares. Por exemplo, o padrão de projeto Decorator é introduzido com um <code>JScrollPane</code> do Swing, na esperança de que este exemplo seja mais memorável do que o exemplo padrão utilizando <i>streams</i> do Java.</p>
 
-<p>Figura 22.1: Um diagrama de objetos do Violet</p>
+<div class="figure" id="fig.vio.diagram">
+  <img src="../images/violet/object-sample.png" alt="[Um Diagrama de Objetos do Violet]" />
+  <p>Figura 22.1: Um Diagrama de Objetos do Violet</p>
+</div>
 
-<p>Eu precisava de um subconjunto leve da UML para o livro: diagramas de classes, diagramas de sequência e uma variação do diagrama de objetos que mostra referências para objetos Java (Figura 22.1). Eu também queria que os alunos pudessem desenhar seus próprios diagramas. Contudo, ofertas comerciais como Rational Rose eram não apenas caras, mas também difíceis de aprender e usar [<a href="bibliography.html#bib:shumba:ratrose">Shu05</a>] e as alternativas de código aberto disponíveis à época eram limitadas ou defeituosas demais para serem úteis, nas quais diagramas são especificados por declarações textuais em lugar das costumeiras interfaces baseadas no uso do mouse. Em particular, os diagramas de sequência do ArgoUML eram seriamente fracos.</p>
+<p>Eu precisava de um subconjunto leve da UML para o livro: diagramas de classes, diagramas de sequência e uma variação do diagrama de objetos que mostra referências para objetos Java (<a href="#fig.vio.diagram">Figura&nbsp;22.1</a>). Eu também queria que os alunos pudessem desenhar seus próprios diagramas. Contudo, ofertas comerciais como Rational Rose eram não apenas caras, mas também difíceis de aprender e usar [<a href="bibliography.html#bib:shumba:ratrose">Shu05</a>] e as alternativas de código aberto disponíveis à época eram limitadas ou defeituosas demais para serem úteis, nas quais diagramas são especificados por declarações textuais em lugar das costumeiras interfaces baseadas no uso do mouse. Em particular, os diagramas de sequência do ArgoUML eram seriamente fracos.</p>
 
 <p>Eu decidi tentar fazer algo a respeito implementando o editor mais simples possível que seja (a) útil para estudantes e (b) um exemplo de um <i>framework</i> extensível que os estudantes possam entender e modificar. Assim, Violet nasceu.</p>
 
@@ -41,9 +44,12 @@ c<html>
 
 <p>Violet é baseado em um <i>framework</i> de edição de grafos que pode renderizar e editar nós e arestas de formas arbitrárias. O editor de UML do Violet tem nós para classes, objetos, barras de ativação (em diagramas de sequência) e assim por diante, e arestas para os vários formatos de aresta em diagramas UML. Outra instância do <i>framework</i> de grafos pode exibir diagramas de entidade-relacionamento ou diagramas de sintaxe.</p>
 
-<p>Figura 22.2: Uma Instância Simples do Editor</p>
+<div class="figure" id="fig.vio.editor">
+  <img src="../images/violet/Ch8-06.png" alt="[Uma Instância Simples do Editor]" />
+  <p>Figura 22.2: Uma Instância Simples do Editor</p>
+</div>
 
-<p>Para ilustrar o <i>framework</i>, vamos considerar um editor para grafos muito simples, com nós circulares pretos e brancos e arestas em linha reta (Figura 22.2). A classe <code>SimpleGraph</code> (grafo simples) especifica objetos protótipo para os tipos nó e aresta, ilustrando o padrão Prototype:</p>
+<p>Para ilustrar o <i>framework</i>, vamos considerar um editor para grafos muito simples, com nós circulares pretos e brancos e arestas em linha reta (<a href="#fig.vio.editor">Figura&nbsp;22.2</a>). A classe <code>SimpleGraph</code> (grafo simples) especifica objetos protótipo para os tipos nó e aresta, ilustrando o padrão Prototype:</p>
 
 <code>
 public class SimpleGraph extends AbstractGraph
@@ -66,21 +72,24 @@ public class SimpleGraph extends AbstractGraph
 }
 </code>
 
-<p>Objetos protótipo são usados para desenhar os botões nó e aresta na parte superior da Figura 22.2. Eles são clonados sempre que o usuário adiciona uma nova instância de nó ou aresta ao grafo. <code>Node</code> (nó) e <code>Edge</code> (aresta) são interface com os seguintes métodos principais:</p>
+<p>Objetos protótipo são usados para desenhar os botões nó e aresta na parte superior da <a href="#fig.vio.editor">Figura&nbsp;22.2</a>. Eles são clonados sempre que o usuário adiciona uma nova instância de nó ou aresta ao grafo. <code>Node</code> (nó) e <code>Edge</code> (aresta) são interface com os seguintes métodos principais:</p>
 
 <ul>
   <li>Ambas as interfaces têm um método <code>getShape</code> que retorna um objeto Java2D <code>Shape</code> da forma do nó ou aresta.</li>
   <li>A interface <code>Edge</code> tem métodos que fornecem os nós do início e do fim da aresta.</li>
-  <li>O método <code>getConnectionPoint</code> (obter ponto de conexão) na interface <code>Node</code> calcula um ponto ideal de conexão na borda de um nó (ver Figura 22.3).</li>
+  <li>O método <code>getConnectionPoint</code> (obter ponto de conexão) na interface <code>Node</code> calcula um ponto ideal de conexão na borda de um nó (ver <a href="#fig.vio.connection">Figura&nbsp;22.3</a>).</li>
   <li>O método <code>getConnectionPoints</code> da interface <code>Edge</code> fornece os dois pontos terminais da aresta. Este método é necessário para desenhar as "alças" que indicam a aresta selecionada no momento.</li>
   <li>Um nó pode ter filhos que se movem junto com o pai, e fornece métodos para enumerar e gerenciar filhos.</li>
 </ul>
 
-<p>Figura 22.3: Encontrando um Ponto de Conexão na Borda da Forma Nó</p>
+<div class="figure" id="fig.vio.connection">
+  <img src="../images/violet/Ch8-07.png" alt="[Encontrando um Ponto de Conexão na Borda da Forma Nó]" />
+  <p>Figura 22.3: Encontrando um Ponto de Conexão na Borda da Forma Nó</p>
+</div>
 
 <p>As classes de conveniência <code>AbstractNode</code> e <code>AbstractEdge</code> implementam uma quantidade destes métodos, e as classes <code>RectangularNode</code> e <code>SegmentedLineEdge</code> fornecem implementações completas de nós retangulares com uma string de título e bordas que são feitas de segmentos de linha.</p>
 
-<p>No caso do nosso editor simples de grafos, nós precisaríamos prover um método <code>draw</code> (desenhar), um método <code>contains</code> (contém) e o método <code>getConnectionPoint</code>, que descreve a forma da borda do nó. O código é dado abaixo, e a Figura 22.4 mostra o diagrama de classes destas classes (desenhados, é claro, com Violet).</p>
+<p>No caso do nosso editor simples de grafos, nós precisaríamos prover um método <code>draw</code> (desenhar), um método <code>contains</code> (contém) e o método <code>getConnectionPoint</code>, que descreve a forma da borda do nó. O código é dado abaixo, e a <a href="#fig.vio.classdiag">Figura&nbsp;22.4</a> mostra o diagrama de classes destas classes (desenhados, é claro, com Violet).</p>
 
 <code>
 public class CircleNode extends AbstractNode
@@ -139,7 +148,10 @@ public class LineEdge extends AbstractEdge
 }
 </code>
 
-<p>Figura 22.4: Diagrama de Classes para um Grafo Simples</p>
+<div class="figure" id="fig.vio.classdiag">
+  <img src="../images/violet/SimpleGraph-in-Violet.png" alt="[Diagrama de Classes para um Grafo Simples]" />
+  <p>Figura 22.4: Diagrama de Classes para um Grafo Simples</p>
+</div>
 
 <p>Em resumo, Violet provê um <i>framework</i> simples para edição de grafos. Para obter uma instância do editor, definir classes nó e aresta e oferecer métodos em uma classe de grafos que gere objetos protótipo nó e aresta.</p>
 
@@ -159,10 +171,12 @@ public void setColor(Color newValue)
 public Color getColor()
 </code>
 
-<p>Nenhum trabalho adicional é necessário. O editor de grafos pode agora alterar cores de nós circulares (Figura 22.5).</p>
+<p>Nenhum trabalho adicional é necessário. O editor de grafos pode agora alterar cores de nós circulares (<a href="#fig.vio.circlecolors">Figura&nbsp;22.5</a>).</p>
 
-
-<p>Figura 22.5: Editando Cores de Círculos com o Editor JavaBeans de Cores padrão</p>
+<div class="figure" id="fig.vio.circlecolors">
+  <img src="../images/violet/Ch8-11.png" alt="[Editando Cores de Círculos com o Editor JavaBeans de Cores padrão]" />
+  <p>Figura 22.5: Editando Cores de Círculos com o Editor JavaBeans de Cores padrão</p>
+</div>
 
 
 <h2>Persistência de longo prazo</h2>
@@ -382,9 +396,12 @@ file.save.icon=/icons/16x16/save.png
 
 <p>Cada uma destas operações tem uma operação de desfazer óbvia. Por exemplo, a operação de desfazer a adição de um nó é a remoção deste nó. A operação de desfazer o deslocamento de um nó é movê-lo pelo vetor oposto.</p>
 
-<p>Figura 22.6: Uma Operação de Desfazer Deve Desfazer Mudanças Estruturais no Modelo</p>
+<div class="figure" id="fig.vio.undo">
+  <img src="../images/violet/undo.png" alt="[Uma Operação de Desfazer Deve Desfazer Mudanças Estruturais no Modelo]" />
+  <p>Figura 22.6: Uma Operação de Desfazer Deve Desfazer Mudanças Estruturais no Modelo</p>
+</div>
 
-<p>Note que estas operações atômicas não são a mesma coisa que as ações na interface gráfica ou os métodos da interface <code>Graph</code> que as ações do usuário na interface gráfica invocam. Por exemplo, considere o diagrama de sequência na Figura 22.6, e suponha que o usuário arraste o <i>mouse</i> da barra de ativação para a linha de vida à direita. Quando o botão do <i>mouse</i> é liberado, o método:</p>
+<p>Note que estas operações atômicas não são a mesma coisa que as ações na interface gráfica ou os métodos da interface <code>Graph</code> que as ações do usuário na interface gráfica invocam. Por exemplo, considere o diagrama de sequência na <a href="#fig.vio.undo">Figura&nbsp;22.6</a>, e suponha que o usuário arraste o <i>mouse</i> da barra de ativação para a linha de vida à direita. Quando o botão do <i>mouse</i> é liberado, o método:</p>
 
 <code>public boolean addEdgeAtPoints(Edge e, Point2D p1, Point2D p2)</code>
 
