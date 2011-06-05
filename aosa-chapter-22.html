@@ -410,6 +410,27 @@ public interface GraphModificationListener
 
 <p>Se você quer suportar desfazer/refazer em sua aplicação, pense cuidadosamente a respeito das operações atômicas no seu modelo (e não na interface com o usuário). No modelo, dispare eventos quando uma alteração estrutural ocorre, e permita que o gerenciador de operações de desfazer do Swing colete e agrupe estes eventos.</p>
 
+
+<h2>22.9. Arquitetura de <i>plugins</i></h2>
+
+<p class="verificar fussing">Para um programador familiarizado com gráficos 2D, não é difícil adicionar um novo tipo de diagrama ao Violet. Por exemplo, os diagramas de atividades foram uma contribuição de terceiros. Quando eu precisei criar diagramas de sintaxe e diagramas ER, eu achei mais rápido escrever extensões do Violet do que fussing com Visio ou Dia. (Cada tipo de diagrama levou um dia para ser implementado.)</p>
+
+<p>Estes implementações não exigem um conhecimento completo do Violet. Apenas as interfaces nó, grafo e aresta e as implementações de conveniência são necessárias. Com o objetivo de tornar mais fácil para os contribuidores desacoplarem-se da evolução do <i>framework</i>, eu projetei uma arquitetura simples de <i>plugins</i>.</p>
+
+<p>É claro, muitos programas têm uma arquitetura de <i>plugins</i>, muitas delas bastante elaboradas. Quando alguém sugeriu que Violet deveria suportar OSGI, eu estremeci e em lugar disto implementei a coisa mais simples que funcionasse.</p>
+
+<p>Os contribuidores simplesmente um arquivo JAR com suas implementações de grafo, nó e aresta e colocam-nas dentro do diretório <code>plugins</code>. Quando Violet inicia, ele carrega estes <i>plugins</i>, usando a classe <code>ServiceLoader</code> do Java. esta classe foi projetada para carregar serviços como <i>drivers</i> JDBC. Um <code>ServiceLoader</code> carrega arquivos JAR que se espera que forneçam uma classe que implemente uma dada interface (no nosso caso, a interface <code>Graph</code>).</p>
+
+<p>Cada arquivo JAR deve ter um subdiretório <code>META-INF/services</code> contendo um arquivo cujo nome é o nome completo (incluindo o pacote) da classe ou interface (por exemplo, <code>com.horstmann.violet.Graph</code>), e que contém o nome de todas as classes implementadoras, uma por linha. O <code>ServiceLoader</code> constroi um carregador de classes para o diretório <code>plugins</code> e carrega todos os <i>plugins</i>:</p>
+
+<code>
+ServiceLoader<Graph> graphLoader = ServiceLoader.load(Graph.class, classLoader);
+for (Graph g : graphLoader) // ServiceLoader<Graph> implements Iterable<Graph>
+  registerGraph(g);
+</code>
+
+<p>Esta é uma funcionalidade simples mas útil do Java padrão que você pode considerar valiosa para seus próprios projetos.</p>
+
 </body>
 </html>
 
