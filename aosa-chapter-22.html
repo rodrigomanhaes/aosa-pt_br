@@ -37,13 +37,13 @@ c<html>
 <p>Neste artigo, eu discuto algumas das opções arquiteturais originais no Violet, bem como sua evolução. Uma parte do artigo é focada em edição de grafos, mas outras partes - como o uso de propriedades JavaBeans e persistência, Java WebStart e arquitetura de plugins - deve ser de interesse geral.</p>
 
 
-<h2>O Framework de Grafos</h2>
+<h2>O <i>Framework</i> de Grafos</h2>
 
-<p>Violet é baseado em um framework de edição de grafos que pode renderizar e editar nós e arestas de formas arbitrárias. O editor de UML do Violet tem nós para classes, objetos, barras de ativação (em diagramas de sequência) e assim por diante, e arestas para os vários formatos de aresta em diagramas UML. Outra instância do framework de grafos pode exibir diagramas de entidade-relacionamento ou diagramas de sintaxe.</p>
+<p>Violet é baseado em um <i>framework</i> de edição de grafos que pode renderizar e editar nós e arestas de formas arbitrárias. O editor de UML do Violet tem nós para classes, objetos, barras de ativação (em diagramas de sequência) e assim por diante, e arestas para os vários formatos de aresta em diagramas UML. Outra instância do <i>framework</i> de grafos pode exibir diagramas de entidade-relacionamento ou diagramas de sintaxe.</p>
 
 <p>Figura 22.2: Uma Instância Simples do Editor</p>
 
-<p>Para ilustrar o framework, vamos considerar um editor para grafos muito simples, com nós circulares pretos e brancos e arestas em linha reta (Figura 22.2). A classe <code>SimpleGraph</code> (grafo simples) especifica objetos protótipo para os tipos nó e aresta, ilustrando o padrão Prototype:</p>
+<p>Para ilustrar o <i>framework</i>, vamos considerar um editor para grafos muito simples, com nós circulares pretos e brancos e arestas em linha reta (Figura 22.2). A classe <code>SimpleGraph</code> (grafo simples) especifica objetos protótipo para os tipos nó e aresta, ilustrando o padrão Prototype:</p>
 
 <code>
 public class SimpleGraph extends AbstractGraph
@@ -141,9 +141,9 @@ public class LineEdge extends AbstractEdge
 
 <p>Figura 22.4: Diagrama de Classes para um Grafo Simples</p>
 
-<p>Em resumo, Violet provê um framework simples para edição de grafos. Para obter uma instância do editor, definir classes nó e aresta e oferecer métodos em uma classe de grafos que gere objetos protótipo nó e aresta.</p>
+<p>Em resumo, Violet provê um <i>framework</i> simples para edição de grafos. Para obter uma instância do editor, definir classes nó e aresta e oferecer métodos em uma classe de grafos que gere objetos protótipo nó e aresta.</p>
 
-<p>É claro, há outros frameworks de grafos disponíveis, como JGraph [Ald02] e JUNG(2). Contudo, estes frameworks são consideravelmente mais complexos e eles fornecem frameworks para desenho de grafos, não para aplicações que desenham grafos.</p>
+<p>É claro, há outros <i>frameworks</i> de grafos disponíveis, como JGraph [Ald02] e JUNG(2). Contudo, estes <i>frameworks</i> são consideravelmente mais complexos e eles fornecem <i>frameworks</i> para desenho de grafos, não para aplicações que desenham grafos.</p>
 
 
 <h2>O Uso de Propriedades JavaBeans</h2>
@@ -152,7 +152,7 @@ public class LineEdge extends AbstractEdge
 
 <p>Java não possui suporte nativo a propriedades. Ao invés disto, propriedades JavaBeans podem ser acessadas por pares de métodos de acesso (<i>getters</i>) e alteração (<i>setters</i>) de atributos, ou especificados em classes <code>BeanInfo</code> associadas. Além disto, editores de propriedades podem ser especificados para editar visualmente valores de propriedades. O JDK contém até mesmo alguns editores básicos de propriedades, por exemplo, para a classe <code>java.awt.Color</code>.</p>
 
-<p>O framework de Violet faz pleno uso da especificação JavaBeans. Por exemplo, a classe <code>CircleNode</code> pode expor uma propriedade cor simplesmente provendo dois métodos:</p>
+<p>O <i>framework</i> de Violet faz pleno uso da especificação JavaBeans. Por exemplo, a classe <code>CircleNode</code> pode expor uma propriedade cor simplesmente provendo dois métodos:</p>
 
 <code>
 public void setColor(Color newValue)
@@ -265,7 +265,7 @@ Graph graph = (Graph) decoder.readObject();
 
 <h2>Java WebStart</h2>
 
-<p>Java WebStart é uma tecnologia para iniciar uma aplicação local a partir de um navegador web. É fornecido um arquivo JNLP que dispara uma aplicação de apoio no navegador que, por sua vez, baixa e roda o programa Java. A aplicação pode ser assinada digitalmente, situação na qual o usuário deve aceitar o certificado; ou pode ser não assinada, quando a aplicação roda em uma caixa de areia (<i>sandbox</i>) que é ligeiramente mais permissiva que a caixa de areia dos <i>applets</i>.</p>
+<p>Java WebStart é uma tecnologia para iniciar uma aplicação local a partir de um navegador <i>web</i>. É fornecido um arquivo JNLP que dispara uma aplicação de apoio no navegador que, por sua vez, baixa e roda o programa Java. A aplicação pode ser assinada digitalmente, situação na qual o usuário deve aceitar o certificado; ou pode ser não assinada, quando a aplicação roda em uma caixa de areia (<i>sandbox</i>) que é ligeiramente mais permissiva que a caixa de areia dos <i>applets</i>.</p>
 
 <p class="verificar">Eu não penso que usuários finais possam ou devam ser capazes de julgar a validade de um certificado digital e suas implicações de segurança. Um dos pontos fortes da plataforma Java é sua segurança, e eu sinto que é importante "play to this strength"·</p>
 
