@@ -367,7 +367,48 @@ file.save.icon=/icons/16x16/save.png
 <p class="verificar splash">Alexandre também adicionou suporte a barras laterais, uma barra de <i>status</i>, um painel de boas vindas e uma tela de <i>splash</i>. Idealmente, tudo isto deveria ser parte de um <i>framework</i> de aplicações Swing.</p>
 
 
+<h2>22.8. Desfazer/Refazer</h2>
 
+<p>Implementar desfazer/refazer múltiplos parece ser uma tarefa difícil, mas o pacote de desfazer do Swing ([Top00], Capítulo 9) provê uma boa orientação arquitetural. Um <code>UndoManager</code> (gerenciador de desfazer) gerencia uma pilha de objetos <code>UndoableEdit</code> (edição reversível). Cada um deles tem um método <code>undo</code> (desfazer) que desfaz o efeito da operação de edição, e um <code>redo</code> (refazer) que desfaz o comando desfazer (isto é, realiza a operação de edição original). Um <code>CompoundEdit</code> (edição composta) é uma sequência de operações <code>UndoableEdit</code> que devem ser desfeitas ou refeitas como um todo único. Você é incentivado a definir operações de edição pequenas e atômicas (como adicionar ou remover uma única aresta ou nó, no caso de um grafo) que são agrupadas em edições compostas conforme necessário.</p>
+
+<p>Constitui um desafio definir um conjunto pequeno de operações atômicas, cada uma das quais pode ser facilmente desfeita. Em Violet, elas são:</p>
+
+<ul>
+  <li>adicionar e remover um nó ou aresta</li>
+  <li>anexar ou desanexar um filho do nó</li>
+  <li>mover um nó</li>
+  <li>mudar uma propriedade de um nó ou aresta</li>
+</ul>
+
+<p>Cada uma destas operações tem uma operação de desfazer óbvia. Por exemplo, a operação de desfazer a adição de um nó é a remoção deste nó. A operação de desfazer o deslocamento de um nó é movê-lo pelo vetor oposto.</p>
+
+<p>Figura 22.6: Uma Operação de Desfazer Deve Desfazer Mudanças Estruturais no Modelo</p>
+
+<p>Note que estas operações atômicas não são a mesma coisa que as ações na interface gráfica ou os métodos da interface <code>Graph</code> que as ações do usuário na interface gráfica invocam. Por exemplo, considere o diagrama de sequência na Figura 22.6, e suponha que o usuário arraste o <i>mouse</i> da barra de ativação para a linha de vida à direita. Quando o botão do <i>mouse</i> é liberado, o método:</p>
+
+<code>public boolean addEdgeAtPoints(Edge e, Point2D p1, Point2D p2)</code>
+
+<p class="verificar">é invocado. Este método adiciona uma aresta, mas ele pode desencadear outras operações, conforme especificado pelas subclasses de <code>Edge</code> e <code>Node</code> participantes. Neste caso, a barra de ativação será adicionada à linha de vida à direita. Para desfazer a operação é necessário remover a barra de ativação. Assim, o <i>modelo</i> (em nosso caso, o grafo) necessita registrar as mudanças estruturais que precisam ser desfeitas. Não é suficiente coletar as operações do controlador.</p>
+
+<p>Conforme a visão do pacote de desfazer do Swing, as classes de grafo, nó e aresta devem enviar notificações <code>UndoableEditEvent</code> para um <code>UndoManager</code> sempre que uma edição estrutural ocorre. Violet tem um projeto mais geral onde o próprio grafo gerencia os ouvintes da seguinte interface:</p>
+
+<code>
+public interface GraphModificationListener
+{
+  void nodeAdded(Graph g, Node n);
+  void nodeRemoved(Graph g, Node n);
+  void nodeMoved(Graph g, Node n, double dx, double dy);
+  void childAttached(Graph g, int index, Node p, Node c);
+  void childDetached(Graph g, int index, Node p, Node c);
+  void edgeAdded(Graph g, Edge e);
+  void edgeRemoved(Graph g, Edge e);
+  void propertyChangedOnNodeOrEdge(Graph g, PropertyChangeEvent event);
+}
+</code>
+
+<p>O <i>framework</i> instala em cada grafo um ouvinte que é uma ponte para o gerenciador de desfazer. Para suportar as operações de desfazer, adicionar ao modelo um suporte genérico a ouvintes é superdimensionar o <i>design</i> - as operações do grafo poderiam interagir diretamente com o gerenciador das operações de desfazer. Contudo, eu também quis que houvesse suporte a uma funcionalidade experimental de edição colaborativa.</p>
+
+<p>Se você quer suportar desfazer/refazer em sua aplicação, pense cuidadosamente a respeito das operações atômicas no seu modelo (e não na interface com o usuário). No modelo, dispare eventos quando uma alteração estrutural ocorre, e permita que o gerenciador de operações de desfazer do Swing colete e agrupe estes eventos.</p>
 
 </body>
 </html>
