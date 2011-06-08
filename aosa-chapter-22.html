@@ -179,9 +179,9 @@ public Color getColor()
 </div>
 
 
-<h2>Persistência de longo prazo</h2>
+<h2>22.4. Persistência de longo prazo</h2>
 
-<p>Como qualquer editor, Violet deve salvar as criações do usuário em um arquivo e carregá-las posteriormente. Eu dei uma olhada na especificação XMI<sup class="footnote"><a href="#footnote-3">3</a></sup>, que foi projetada como um formato de intercâmbio padrão para modelos UML. Eu o considerei pesado, confuso e difícil de consumir. Eu acredito não ter sido o único - XML tem uma reputação de interoperabilidade pobre mesmo para os modelos mais simples [<a href="bibliography.html#bib:persson:osstools">PGL+05</a>].</p>
+<p>Como qualquer editor, Violet deve salvar as criações do usuário em um arquivo e carregá-las posteriormente. Eu dei uma olhada na especificação XMI<sup class="footnote"><a href="#footnote-3">3</a></sup>, que foi projetada como um formato de intercâmbio padrão para modelos UML. Eu o considerei pesado, confuso e difícil de consumir. Eu acredito não ter sido o único - XMI tem uma reputação de interoperabilidade pobre mesmo para os modelos mais simples [<a href="bibliography.html#bib:persson:osstools">PGL+05</a>].</p>
 
 <p>Eu pensei em simplesmente usar a serialização do Java, mas é difícil ler versões antigas de um objeto serializado cuja implementação foi alterada ao longo do tempo. Este problema também foi antecipado pelos arquitetos do JavaBeans, que desenvolveram um formato padrão de XML para persistência de longo prazo<sup class="footnote"><a href="#footnote-4">4</a></sup>. Um objeto Java - no caso de Violet, um diagrama UML - é serializado como uma sequência de declarações para construí-lo e modificá-lo. Aqui está um exemplo:</p>
 
@@ -222,7 +222,7 @@ public Color getColor()
 
 <p>Quando a classe <code>XMLDecoder</code> lê este arquivo, ela executa as declarações (nomes de pacotes são omitidos por motivo de simplicidade).</p>
 
-<code>
+<code><pre>
 ClassDiagramGraph obj1 = new ClassDiagramGraph();
 ClassNode ClassNode0 = new ClassNode();
 ClassNode0.setName(…);
@@ -233,13 +233,13 @@ obj1.addNode(ClassNode1, new Point2D.Double(200, 60));
 ClassRelationShipEdge obj2 = new ClassRelationShipEdge();
 obj2.setEndArrowHead(ArrowHead.TRIANGLE);
 obj1.connect(obj2, ClassNode0, ClassNode1);
-</code>
+</pre></code>
 
-<p>Uma vez que a semântica dos construtores, propriedades e métodos não foram alteradas, uma nova versão do programa será capaz ler um arquivo que foi produzido por uma versão mais antiga.</p>
+<p>Uma vez que a semântica dos construtores, propriedades e métodos não foi alterada, uma nova versão do programa será capaz de ler um arquivo que foi produzido por uma versão mais antiga.</p>
 
-<p>Produzir tais arquivos é bastante simples. O codificador (<i>encoder</i>) automaticamente as propriedades de cada objeto e utiliza os métodos de alteração (<i>setters</i>) para cada propriedade cujo valor difere do valor padrão. Os tipos de dados mais básicos são manipulados pela plataforma Java; contudo, eu tive que fornecer manipuladores especiais para <code>Point2D</code>, <code>Line2D</code> e <code>Rectangle2D</code>. Mais importante, o codificador deve saber que um grafo pode ser serializado como uma sequência de chamadas aos métodos <code>addNode</code> e <code>connect</code>:</p>
+<p>Produzir tais arquivos é bastante simples. O codificador (<i>encoder</i>) enumera automaticamente as propriedades de cada objeto e utiliza os métodos de alteração (<i>setters</i>) para cada propriedade cujo valor difere do valor padrão. Os tipos de dados mais básicos são manipulados pela plataforma Java; contudo, eu tive que fornecer manipuladores especiais para <code>Point2D</code>, <code>Line2D</code> e <code>Rectangle2D</code>. Mais importante, o codificador deve saber que um grafo pode ser serializado como uma sequência de chamadas aos métodos <code>addNode</code> (adicionar nó) e <code>connect</code> (conectar):</p>
 
-<code>
+<code><pre>
 encoder.setPersistenceDelegate(Graph.class, new DefaultPersistenceDelegate()
 {
   protected void initialize(Class<?> type, Object oldInstance,
@@ -260,9 +260,9 @@ encoder.setPersistenceDelegate(Graph.class, new DefaultPersistenceDelegate()
       }));
    }
  });
-</code>
+</pre></code>
 
-Uma vez que o codificador foi configurado, salvar um grafo é tão simples quanto:
+<p>Uma vez que o codificador foi configurado, salvar um grafo é tão simples quanto:</p>
 
 <code>
 encoder.writeObject(graph);
