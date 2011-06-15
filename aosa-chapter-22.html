@@ -277,11 +277,11 @@ Graph graph = (Graph) decoder.readObject();
 <p>Esta abordagem funcionou extremamente bem por numerosas versões de Violet, com uma exceção. Uma refatoração recente mudou alguns nomes de pacotes e assim quebrou a compatibilidade retroativa. Uma opção teria sido manter as classes em seus pacotes originais, mesmo que eles já não combinassem com a nova estrutura de pacotes. Em vez disto, o mantenedor forneceu um tradutor XML para reescrever os nomes dos pacotes ao ler um arquivo legado.</p>
 
 
-<h2>Java WebStart</h2>
+<h2>22.5. Java WebStart</h2>
 
-<p>Java WebStart é uma tecnologia para iniciar uma aplicação local a partir de um navegador <i>web</i>. É fornecido um arquivo JNLP que dispara uma aplicação de apoio no navegador que, por sua vez, baixa e roda o programa Java. A aplicação pode ser assinada digitalmente, situação na qual o usuário deve aceitar o certificado; ou pode ser não assinada, quando a aplicação roda em uma caixa de areia (<i>sandbox</i>) que é ligeiramente mais permissiva que a caixa de areia dos <i>applets</i>.</p>
+<p>Java WebStart é uma tecnologia para iniciar uma aplicação local a partir de um navegador <i>web</i>. É fornecido um arquivo JNLP que dispara uma aplicação de apoio no navegador que, por sua vez, baixa e roda o programa Java. A aplicação pode ser assinada digitalmente, situação na qual o usuário deve aceitar o certificado; ou pode ser não assinada, quando a aplicação roda em uma caixa de areia que é ligeiramente mais permissiva que a caixa de areia dos <i>applets</i>.</p>
 
-<p class="verificar">Eu não penso que usuários finais possam ou devam ser capazes de julgar a validade de um certificado digital e suas implicações de segurança. Um dos pontos fortes da plataforma Java é sua segurança, e eu sinto que é importante "play to this strength"·</p>
+<p>Eu não penso que usuários finais possam ou devam ser capazes de julgar a validade de um certificado digital e suas implicações de segurança. Um dos pontos fortes da plataforma Java é sua segurança, e eu acho que é importante tirar proveito disto·</p>
 
 <p>A caixa de areia do Java WebStart é suficientemente poderosa para permitir que usuários realizem trabalho útil, incluindo carregar e salvar arquivos e imprimir. Estas operações são tratadas de forma segura e conveniente do ponto de vista do usuário. O usuário é alertado de que a aplicação quer acessar o sistema de arquivos local e então escolhe o arquivo para ser lido ou escrito. A aplicação meramente recebe um objeto de fluxo (<i>stream</i>), sem ter a oportunidade de navegar pelo sistema de arquivos durante o processo de seleção do arquivo.</p>
 
@@ -293,7 +293,7 @@ Graph graph = (Graph) decoder.readObject();
 
 <code>
 FileService service = FileService.getInstance(initialDirectory);
-  // detects whether we run under WebStart
+  // detecta se estamos rodando sob Java WebStart
 FileService.Open open = fileService.open(defaultDirectory, defaultName,
   extensionFilter);
 InputStream in = open.getInputStream();
