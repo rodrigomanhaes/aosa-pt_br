@@ -406,7 +406,7 @@ file.save.icon=/icons/16x16/save.png
 
 <code>public boolean addEdgeAtPoints(Edge e, Point2D p1, Point2D p2)</code>
 
-<p class="verificar">é invocado. Este método adiciona uma aresta, mas ele pode desencadear outras operações, conforme especificado pelas subclasses de <code>Edge</code> e <code>Node</code> participantes. Neste caso, a barra de ativação será adicionada à linha de vida à direita. Para desfazer a operação é necessário remover a barra de ativação. Assim, o <i>modelo</i> (em nosso caso, o grafo) necessita registrar as mudanças estruturais que precisam ser desfeitas. Não é suficiente coletar as operações do controlador.</p>
+<p>é invocado. Este método adiciona uma aresta, mas ele pode desencadear outras operações, conforme especificado pelas subclasses de <code>Edge</code> e <code>Node</code> participantes. Neste caso, a barra de ativação será adicionada à linha de vida à direita. Para desfazer a operação é necessário remover a barra de ativação. Assim, o <i>modelo</i> (em nosso caso, o grafo) necessita registrar as mudanças estruturais que precisam ser desfeitas. Não é suficiente coletar as operações do controlador.</p>
 
 <p>Conforme a visão do pacote de desfazer do Swing, as classes de grafo, nó e aresta devem enviar notificações <code>UndoableEditEvent</code> para um <code>UndoManager</code> sempre que uma edição estrutural ocorre. Violet tem um projeto mais geral onde o próprio grafo gerencia os ouvintes da seguinte interface:</p>
 
